@@ -121,17 +121,86 @@ class GameScene extends Phaser.Scene {
             [1881, 93, false], [1881, 279, false], [1881, 465, false], [1881, 651, false],
             [1881, 837, false], [1881, 1023, false],
 
-            // --- Interior maze walls ---
-            // Horizontal interior walls
-            [300, 220, true], [486, 220, true], [672, 220, true],
-            [900, 400, true], [1086, 400, true], [1272, 400, true],
-            [500, 600, true], [686, 600, true], [872, 600, true],
-            [1200, 200, true], [1386, 200, true], [1572, 200, true],
-            [1100, 700, true], [1286, 700, true], [1472, 700, true],
-            [300, 775, true], [486, 775, true], [672, 775, true],
+            // // --- Interior maze walls ---
+            // // Horizontal interior walls
+            // [300, 220, true], [486, 220, true], [672, 220, true],
+            // [900, 400, true], [1086, 400, true], [1272, 400, true],
+            // [500, 600, true], [686, 600, true], [872, 600, true],
+            // [1200, 200, true], [1386, 200, true], [1572, 200, true],
+            // [1100, 700, true], [1286, 700, true], [1472, 700, true],
+            // [300, 775, true], [486, 775, true], [672, 775, true],
 
-            // Vertical interior walls
-            [248, 300, false], [248, 486, false],
+            // // Vertical interior walls
+            // [248, 300, false], [248, 486, false],
+            // horizontal
+    [372, 220, true],
+    [558, 220, true],
+    [930, 220, true],
+    [1116, 220, true],
+    [1488, 220, true],
+
+    // vertical
+    [248, 279, false],
+    [620, 279, false],
+    [806, 279, false],
+    [1364, 279, false],
+    [1736, 279, false],
+
+
+    // ---- Upper Middle ----
+
+    // horizontal
+    [186, 406, true],
+    [372, 406, true],
+    [744, 406, true],
+    [930, 406, true],
+    [1302, 406, true],
+    [1488, 406, true],
+    [1674, 406, true],
+
+    // vertical
+    [434, 465, false],
+    [992, 465, false],
+    [1550, 465, false],
+
+
+    // ---- Center Section ----
+
+    // horizontal
+    [558, 592, true],
+    [744, 592, true],
+    [1116, 592, true],
+    [1302, 592, true],
+
+    // vertical
+    [248, 651, false],
+    [620, 651, false],
+    [1178, 651, false],
+    [1736, 651, false],
+
+
+    // ---- Lower Middle ----
+
+    // horizontal
+    [186, 778, true],
+    [372, 778, true],
+    [930, 778, true],
+    [1116, 778, true],
+    [1488, 778, true],
+    [1674, 778, true],
+
+    // vertical
+    [806, 837, false],
+    [1364, 837, false],
+
+
+    // ---- Bottom Area ----
+
+    // horizontal
+    [558, 920, true],
+    [744, 920, true],
+    [1302, 920, true],
+
         ];
 
         walls.forEach(([x, y, rotated]) => {
