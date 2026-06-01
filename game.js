@@ -387,11 +387,13 @@ class QuizScene extends Phaser.Scene {
         this.quizDiv.style.cssText =
         `
             position:absolute;
-            left: 17vw;
-            top: 50px;
-            margin: 30px;
+            left: 20vw;
+            right: 20vw;
+            top: 2vh;
+            margin: 100px;
             text-align: center;
-            color: rgb(30, 77, 43);
+            // color: rgb(30, 77, 43);
+            color: rgb(26, 58, 143);
         `
 
         var questions = this.quizDiv.querySelector('.questions')
