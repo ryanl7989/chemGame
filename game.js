@@ -1,4 +1,4 @@
-import { questionBank, answerBank } from './questions.js';
+import { questionBank } from './questions.js';
 class Wall extends Phaser.GameObjects.Sprite{
     constructor(scene, x, y){
         super(scene, x, y, 'wall');
@@ -19,6 +19,14 @@ class Door extends Phaser.GameObjects.Sprite{
     }
 }
 
+class EndDoor extends Phaser.GameObjects.Sprite{
+    constructor(scene, x, y){
+        super(scene, x, y, 'endDoor');
+
+        scene.add.existing(this);
+        scene.physics.add.existing(this);
+    }
+}
 
 class GameScene extends Phaser.Scene {
     constructor() {
@@ -28,6 +36,7 @@ class GameScene extends Phaser.Scene {
     preload() {
         this.load.atlas('scientist', 'assets/scientistSpriteSheet.png', 'assets/scientistSprites.json');
         this.load.atlas('door', 'assets/doorSpriteSheet.png', 'assets/doorSprites.json');
+        this.load.atlas('endDoor', 'assets/endDoorSpriteSheet.png', 'assets/endDoorSprites.json');
         this.load.image('background', 'assets/background.jpg');
         this.load.image('wall', 'assets/wall.png');
     }
@@ -66,30 +75,18 @@ class GameScene extends Phaser.Scene {
 
         this.anims.create({ key:'doorOpen', frameRate: 1, frames: this.anims.generateFrameNames('door', {prefix:'door', start: 1, end: 1, zeroPad:1}), repeat: -1});
 
+        this.anims.create({ key:'endDoorClosing', frameRate: 1, frames: this.anims.generateFrameNames('endDoor', {prefix:'endDoor', start: 0, end: 0, zeroPad:1}), repeat: -1});
+
+        this.anims.create({ key:'endDoorOpen', frameRate: 1, frames: this.anims.generateFrameNames('endDoor', {prefix:'endDoor', start: 1, end: 1, zeroPad:1}), repeat: -1});
+
         // scientist sprite creator
-        this.scientist = this.physics.add.sprite(config.scale.width/2, config.scale.height/2, 'scientist');
+        this.scientist = this.physics.add.sprite(200, 900, 'scientist');
         this.scientist.scale=0.7
         this.scientist.body.setSize(50, 130)
 
-        // door creator
-        // this.door = this.physics.add.staticSprite(config.scale.width/2, config.scale.height/4, 'door');
+        // door vars
         this.correct = false
         this.cooldown = false
-        // this.doorOpen = () => {
-        //     console.log(this.correct)
-        //     if(this.correct === true){
-        //         console.log("correct answer")
-        //         doorOpened = true
-        //         this.doorColliderArr[this.doorColliderArr.indexOf(this)].destroy()
-        //         this.door.anims.play('doorOpen', true);
-        //     }
-        //     if(doorOpened === false){
-        //         this.scene.pause()
-        //         this.scene.launch('QuizScene');
-        //     }
-        // }
-        // this.doorCollider = this.physics.add.collider(this.door, this.scientist, this.doorOpen, null, this);
-
 
         // wall creator
         // this.wall = new Wall(this, 400, 400);
@@ -105,11 +102,63 @@ class GameScene extends Phaser.Scene {
     createMaze() {
         const walls = [
             // [x, y, rotated?]
+
+            // ---- Upper Middle ----
+
+            // vertical
+            [610, 130, false],
+            [434, 465, false],
+            [882, 466, false],
+            [1550, 470, false],
+            [248, 279, false],
+            [610, 279, false],
+            [1364, 279, false],
+
+            // horizontal
+            [302, 406, true],
+            [938, 406, true],
+            [1302, 406, true],
+            [1488, 406, true],
+            [1850, 406, true],
+            [558, 220, true],
+            [920, 220, true],
+            [1070, 220, true],
+            [1488, 225, true],
+
+            // ---- Center Section ----
+
+            // vertical
+            [248, 651, false],
+            [620, 651, false],
+            [1178, 651, false],
+            [1736, 651, false],
+
+            // horizontal
+            [563, 520, true],
+            [749, 520, true],
+            [1116, 592, true],
+            [1302, 592, true],
+
+            // ---- Lower Middle ----
+
+            // vertical
+            [1435, 900, false],
+
+            // horizontal
+            [850, 778, true],
+            [186, 758, true],
+            [372, 758, true],
+            [945, 778, true],
+            [1131, 778, true],
+            [1488, 778, true],
+            [1674, 778, true],
+
             // --- Boundary walls ---
+
             // Top
             [186, 39, true], [372, 39, true], [558, 39, true], [744, 39, true],
             [930, 39, true], [1116, 39, true], [1302, 39, true], [1488, 39, true],
-            [1674, 39, true], [1860, 39, true],
+            [1848, 39, true],
             // Bottom
             [186, 1001, true], [372, 1001, true], [558, 1001, true], [744, 1001, true],
             [930, 1001, true], [1116, 1001, true], [1302, 1001, true], [1488, 1001, true],
@@ -119,87 +168,7 @@ class GameScene extends Phaser.Scene {
             [39, 837, false], [39, 1023, false],
             // Right
             [1881, 93, false], [1881, 279, false], [1881, 465, false], [1881, 651, false],
-            [1881, 837, false], [1881, 1023, false],
-
-            // // --- Interior maze walls ---
-            // // Horizontal interior walls
-            // [300, 220, true], [486, 220, true], [672, 220, true],
-            // [900, 400, true], [1086, 400, true], [1272, 400, true],
-            // [500, 600, true], [686, 600, true], [872, 600, true],
-            // [1200, 200, true], [1386, 200, true], [1572, 200, true],
-            // [1100, 700, true], [1286, 700, true], [1472, 700, true],
-            // [300, 775, true], [486, 775, true], [672, 775, true],
-
-            // // Vertical interior walls
-            // [248, 300, false], [248, 486, false],
-            // horizontal
-    [372, 220, true],
-    [558, 220, true],
-    [930, 220, true],
-    [1116, 220, true],
-    [1488, 220, true],
-
-    // vertical
-    [248, 279, false],
-    [620, 279, false],
-    [806, 279, false],
-    [1364, 279, false],
-    [1736, 279, false],
-
-
-    // ---- Upper Middle ----
-
-    // horizontal
-    [186, 406, true],
-    [372, 406, true],
-    [744, 406, true],
-    [930, 406, true],
-    [1302, 406, true],
-    [1488, 406, true],
-    [1674, 406, true],
-
-    // vertical
-    [434, 465, false],
-    [992, 465, false],
-    [1550, 465, false],
-
-
-    // ---- Center Section ----
-
-    // horizontal
-    [558, 592, true],
-    [744, 592, true],
-    [1116, 592, true],
-    [1302, 592, true],
-
-    // vertical
-    [248, 651, false],
-    [620, 651, false],
-    [1178, 651, false],
-    [1736, 651, false],
-
-
-    // ---- Lower Middle ----
-
-    // horizontal
-    [186, 778, true],
-    [372, 778, true],
-    [930, 778, true],
-    [1116, 778, true],
-    [1488, 778, true],
-    [1674, 778, true],
-
-    // vertical
-    [806, 837, false],
-    [1364, 837, false],
-
-
-    // ---- Bottom Area ----
-
-    // horizontal
-    [558, 920, true],
-    [744, 920, true],
-    [1302, 920, true],
+            [1881, 837, false], [1881, 1023, false]
 
         ];
 
@@ -213,36 +182,66 @@ class GameScene extends Phaser.Scene {
             this.physics.add.collider(w, this.scientist);
         });
 
-        this.doorArr = []
-        this.doorColliderArr = []
+        // Doors
+
         const doors = [
-            [245, 650, true], [722, 880, true]
+            [420, 880, true, false, false], [800, 650, true, false, false], [420, 640, true, true, false], [1310, 778, false, false, false], [377, 224, false, false, false], [1551, 651, true, false, false], [1120, 400, false, false, false], [1672, 406, false, false, false], [740, 218, false, false, false], [1246, 218, false, false, false], [1667, 40, false, false, true]
         ]
 
-        doors.forEach(([x, y, rotated]) => {
-            const d = new Door(this, x, y);
-            if (rotated) {
-                d.setAngle(90);
-                d.body.setSize(d.height,d.width)
-            }
-            d.body.setImmovable(true);
-            this.doorArr.push(d)
-            var doorOpened = false
-            let collider;
-            collider = (this.physics.add.collider(d, this.scientist,this.doorOpen = () => {
-                if(this.cooldown == false){
-                    if(this.correct === true){
-                        collider.destroy()
-                        doorOpened = true
-                        d.anims.play('doorOpen', true);
-                        this.correct = false
-                    }
-                    if(doorOpened === false){
-                        this.scene.pause()
-                        this.scene.launch('QuizScene'); //stops the game when the knight dies
-                    }
+        doors.forEach(([x, y, rotated, flipped, endDoor]) => {
+            if (endDoor){
+                const d = new EndDoor(this, x, y);
+                if (flipped) {
+                    d.setFlipY(true);
                 }
-            }, null, this));
+                if (rotated) {
+                    d.setAngle(90);
+                    d.body.setSize(d.height,d.width)
+                }
+                d.body.setImmovable(true);
+                var doorOpened = false
+                let collider;
+                collider = (this.physics.add.collider(d, this.scientist,this.doorOpen = () => {
+                    if(this.cooldown == false){
+                        if(this.correct === true){
+                            collider.destroy()
+                            doorOpened = true
+                            d.anims.play('endDoorOpen', true);
+                            this.correct = false
+                        }
+                        if(doorOpened === false){
+                            this.scene.pause()
+                            this.scene.launch('QuizScene'); //stops the game when the knight dies
+                        }
+                    }
+                }, null, this));
+            } else{
+                const d = new Door(this, x, y);
+                if (flipped) {
+                    d.setFlipY(true);
+                }
+                if (rotated) {
+                    d.setAngle(90);
+                    d.body.setSize(d.height,d.width)
+                }
+                d.body.setImmovable(true);
+                var doorOpened = false
+                let collider;
+                collider = (this.physics.add.collider(d, this.scientist,this.doorOpen = () => {
+                    if(this.cooldown == false){
+                        if(this.correct === true){
+                            collider.destroy()
+                            doorOpened = true
+                            d.anims.play('doorOpen', true);
+                            this.correct = false
+                        }
+                        if(doorOpened === false){
+                            this.scene.pause()
+                            this.scene.launch('QuizScene'); //stops the game when the knight dies
+                        }
+                    }
+                }, null, this));
+            }
         });
     }
 
@@ -250,6 +249,16 @@ class GameScene extends Phaser.Scene {
 
 
     update() {
+
+        if(this.scientist.y < 50) {
+            this.add.text(this.sys.game.config.width/2, this.sys.game.config.height/2, 'You Escaped', {
+                fontFamily: 'Arial',
+                fontSize: '25vh',
+                color: '#000000'
+            }).setOrigin(0.5);
+        }
+
+        console.log(this.scientist.x + "," + this.scientist.y)
         this.scientist.setVelocity(0,0);
 
         if (this.cursors.left.isDown) // move left
@@ -328,27 +337,48 @@ class QuizScene extends Phaser.Scene {
         this.quizDiv = document.createElement('div');
 
         let questionNum = Phaser.Math.Between(0, questionBank.length-1)
-        // How many electrons does oxygen have in its ionized form?
+        let optionNum = []
+        let nums = [1,2,3,4]
+        let randNum = 0
+        let correctChoice = []
+        for(let i = 0; i <= 3; i++) {
+            randNum = Phaser.Math.Between(0, nums.length-1)
+            if(nums[randNum] == 1){
+                optionNum.push(questionBank[questionNum].correct)
+                correctChoice.push("correct")
+            } else if(nums[randNum] == 2) {
+                optionNum.push(questionBank[questionNum].wrong1)
+                correctChoice.push("wrong")
+            } else if(nums[randNum] == 3) {
+                optionNum.push(questionBank[questionNum].wrong2)
+                correctChoice.push("wrong")
+            } else {
+                optionNum.push(questionBank[questionNum].wrong3)
+                correctChoice.push("wrong")
+            }
+            nums.splice(randNum,1)
+        }
+
         this.quizDiv.innerHTML =
         `
             <h1>Answer this question correctly to pass</h1>
             <div class="questions">
-                <h3>${questionBank[questionNum]}</h3>
+                <h3>${questionBank[questionNum].question}</h3>
                 <form>
-                <div class="choices">
-                    <label for="option1">6</label><br>
+                <div id="${correctChoice[0]}" class="choices">
+                    <label for="option1">${optionNum[0]}</label><br>
                 </div>
 
-                <div class="choices">
-                    <label for="option2">4</label><br>
+                <div id="${correctChoice[1]}" class="choices">
+                    <label for="option2">${optionNum[1]}</label><br>
                 </div>
 
-                <div class="choices">
-                    <label for="option3">8</label><br>
+                <div id="${correctChoice[2]}" class="choices">
+                    <label for="option3">${optionNum[2]}</label><br>
                 </div>
 
-                <div id="correct" class="choices">
-                    <label for="option4">Hello World</label>
+                <div id="${correctChoice[3]}" class="choices">
+                    <label for="option4">${optionNum[3]}</label>
                 </div>
                 </form>
             </div>
