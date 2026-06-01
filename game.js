@@ -1,3 +1,50 @@
+class StartScene extends Phaser.Scene {
+    constructor() {
+        super('StartScene')
+    }
+
+    preload() {
+        this.load.image('chemGameBackground', 'assets/chemGameBackground.jpg');
+    }
+
+    create() {
+        const chemGameBackground = this.add.image(0, 0, 'chemGameBackground'); // adds quiz background image
+        chemGameBackground.setOrigin(0.5, 0.5);
+        chemGameBackground.setPosition(this.sys.game.config.width / 2, this.sys.game.config.height / 2); // cneters the image
+        const scaleX = this.sys.game.config.width / chemGameBackground.width;
+        const scaleY = this.sys.game.config.height / chemGameBackground.height;
+        const scale = Math.max(scaleX, scaleY);
+        chemGameBackground.setScale(scale);
+
+        this.add.text(this.sys.game.config.width/2, 350, 'Chemistry Escape Game', {
+            fontFamily: 'Serif',
+            fontSize: '130px',
+            color: '#50C878'
+        }).setOrigin(0.5);
+
+        this.add.text(this.sys.game.config.width/2, 700, 'Click to start the game', {
+            fontFamily: 'Serif',
+            fontSize: '100px',
+            color: '#50C878'
+        }).setOrigin(0.5);
+
+        this.add.text(this.sys.game.config.width/2, 800, 'Arrow keys to play', {
+            fontFamily: 'Serif',
+            fontSize: '60px',
+            color: '#50C878'
+        }).setOrigin(0.5);
+
+
+        this.input.on('pointerdown', function () {
+            this.scene.start('GameScene');
+        },this)
+    }
+
+    update() {
+
+    }
+}
+
 import { questionBank } from './questions.js';
 class Wall extends Phaser.GameObjects.Sprite{
     constructor(scene, x, y){
@@ -472,7 +519,7 @@ const config = {
             debug: true
         }
     },
-    scene: [ GameScene, QuizScene ]
+    scene: [ StartScene, GameScene, QuizScene ]
 }
 
 const game = new Phaser.Game(config)
